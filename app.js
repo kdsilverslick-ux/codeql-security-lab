@@ -1,10 +1,18 @@
 const express = require("express");
 const { execFile } = require("child_process");
 const path = require("path");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 
+const limiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 10,
+    standardHeaders: true,
+    legacyHeaders: false
+});
 
+app.use(limiter);
 // FIX 1: Command injection
 // Only approved hosts may be pinged.
 const allowedHosts = {
